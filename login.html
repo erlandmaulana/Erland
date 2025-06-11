@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Kelas 77</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+      color: #222;
+    }
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: white;
+    }
+    .login-container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      width: 300px;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .login-container {
+      background: #2c2c2c;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+    body.dark-mode input {
+      background-color: #444;
+      color: white;
+      border: 1px solid #666;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    body.dark-mode button {
+      background-color: #3399ff;
+    }
+    body.dark-mode button:hover {
+      background-color: #1a73e8;
+    }
+    .error {
+      color: red;
+      margin-bottom: 10px;
+    }
+    .register-link {
+      margin-top: 15px;
+      font-size: 14px;
+      color: inherit;
+    }
+    .register-link a {
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+    #darkModeToggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: inherit;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <button id="darkModeToggle" title="Ganti Tema">🌙</button>
+
+  <div class="login-container">
+    <h2>Login Kelas 77</h2>
+    <div class="error" id="error-msg"></div>
+    <input type="text" id="username" placeholder="Username" autocomplete="username" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+    <button id="login-btn">Login</button>
+    <div class="register-link">
+      Belum punya akun? <a id="show-register">Daftar di sini</a>
+    </div>
+
+    <div id="register-section" style="display:none; margin-top:20px;">
+      <h3>Daftar Akun Baru</h3>
+      <input type="text" id="reg-username" placeholder="Username baru" />
+      <input type="password" id="reg-password" placeholder="Password baru" />
+      <button id="register-btn">Daftar</button>
+      <button id="cancel-register" style="margin-top:10px; background-color:#aaa;">Batal</button>
+    </div>
+  </div>
+
+  <script>
+    // Dark Mode toggle
+    const darkToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    function updateToggleIcon() {
+      darkToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      body.classList.add('dark-mode');
+    }
+    updateToggleIcon();
+
+    darkToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if(body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        localStorage.setItem('darkMode', 'disabled');
+      }
+      updateToggleIcon();
+    });
+
+    const errorMsg = document.getElementById('error-msg');
+    const loginBtn = document.getElementById('login-btn');
+    const showRegisterLink = document.getElementById('show-register');
+    const registerSection = document.getElementById('register-section');
+    const registerBtn = document.getElementById('register-btn');
+    const cancelRegisterBtn = document.getElementById('cancel-register');
+
+    // Show register form
+    showRegisterLink.addEventListener('click', () => {
+      registerSection.style.display = 'block';
+      errorMsg.textContent = '';
+    });
+
+    // Cancel register
+    cancelRegisterBtn.addEventListener('click', () => {
+      registerSection.style.display = 'none';
+      errorMsg.textContent = '';
+    });
+
+    // Register new user
+    registerBtn.addEventListener('click', () => {
+      const newUser = document.getElementById('reg-username').value.trim();
+      const newPass = document.getElementById('reg-password').value.trim();
+
+      if (!newUser || !newPass) {
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = 'Username dan password harus diisi.';
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users')) || {};
+
+      if(users[newUser]) {
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = 'Username sudah digunakan.';
+        return;
+      }
+
+      users[newUser] = newPass;
+      localStorage.setItem('users', JSON.stringify(users));
+      errorMsg.style.color = 'green';
+      errorMsg.textContent = 'Akun berhasil dibuat! Silakan login.';
+      registerSection.style.display = 'none';
+
+      // Clear inputs
+      document.getElementById('reg-username').value = '';
+      document.getElementById('reg-password').value = '';
+    });
+
+    // Login
+    loginBtn.addEventListener('click', () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!username || !password) {
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = 'Isi username dan password.';
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users')) || {};
+
+      if (users[username] && users[username] === password) {
+        localStorage.setItem('loggedInUser', username);
+        window.location.href = 'halaman.html';
+      } else {
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = 'Username atau password salah.';
+      }
+    });
+
+    // Optional: tekan enter untuk submit login
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  </script>
+
+</body>
+</html>

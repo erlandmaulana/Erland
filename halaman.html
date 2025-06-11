@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seventyseven</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    nav {
+      background: #0056b3;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      padding: 20px;
+      background-color: white;
+      max-width: 900px;
+      margin: 20px auto;
+      border-radius: 5px;
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .dark-mode {
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    .dark-mode .content {
+      background-color: #2c2c2c;
+    }
+
+    .dark-mode input,
+    .dark-mode textarea {
+      background-color: #444;
+      color: white;
+      border: 1px solid #666;
+    }
+
+    .dark-mode button {
+      background-color: #3399ff;
+    }
+
+    .dark-mode nav {
+      background: #003d80;
+    }
+
+    .dark-mode footer {
+      background: #111;
+    }
+
+    .dark-mode a {
+      color: #4fc3f7;
+    }
+
+    #wa-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 15px;
+      border-radius: 50%;
+      font-size: 24px;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      z-index: 999;
+    }
+
+    #darkModeToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Selamat Datang</h1>
+    <p>Ini adalah website kelas 77 yang dibuat sepenuh hati</p>
+    <button id="darkModeToggle">🌙</button>
+  </header>
+
+  <nav>
+    <a onclick="showPage('beranda')">Beranda</a>
+    <a onclick="showPage('tentang')">Tentang</a>
+    <a onclick="showPage('layanan')">Layanan</a>
+    <a onclick="showPage('kontak')">Kontak</a>
+  </nav>
+
+  <div class="content" id="dynamic-content"></div>
+
+  <footer>
+    <p>&copy; SMPN 16 Bogor | Kelas 77</p>
+  </footer>
+
+  <a href="https://wa.me/6287857580324?text=Halo%2C%20saya%20mau%20bertanya%20tentang%20kelas%2077" target="_blank" id="wa-button" title="Hubungi via WhatsApp">💬</a>
+
+  <script>
+    const content = document.getElementById("dynamic-content");
+
+    const greeting = () => {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Selamat pagi!";
+      else if (hour < 18) return "Selamat siang!";
+      else return "Selamat malam!";
+    };
+
+    function showPage(page) {
+      // Reset animasi dengan trik reflow
+      content.classList.remove("content");
+      void content.offsetWidth; // Trigger reflow
+      content.classList.add("content");
+
+      let html = "";
+      switch (page) {
+        case "tentang":
+          html = `<h2>Tentang Kami</h2><p>Kami adalah siswa SMPN 16 Bogor dari kelas 77 yang penuh semangat. Website ini adalah hasil kerja sama kami dalam mempelajari teknologi dan kreativitas!</p>`;
+          break;
+        case "layanan":
+          html = `<h2>Layanan Kami</h2><ul><li>Memiliki ketua kelas yang bertanggung jawab</li><li>Siswa multitalenta yang siap membantu</li><li>Konsultasi kehidupan (serius tapi santai)</li></ul>`;
+          break;
+        case "kontak":
+          html = `<h2>Kontak</h2><p>Email: <a href="mailto:seventyseven16@email.com">seventyseven16@email.com</a></p><p>Telepon: 0878-5758-0324</p><p><a href="https://wa.me/6287857580324?text=Halo%2C%20saya%20mau%20bertanya%20tentang%20kelas%2077" target="_blank" style="display:inline-block; background-color:#25D366; color:white; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:bold;">Chat via WhatsApp</a></p>`;
+          break;
+        default:
+          html = `<p>${greeting()}</p><h2>Halo!</h2><p>Terima kasih telah mengunjungi website kelas kami.</p><h3>Hubungi Kami</h3><form action="https://formsubmit.co/landerlanamau@email.com" method="POST"><input type="text" name="nama" placeholder="Nama Anda" required><textarea name="pesan" placeholder="Pesan Anda" rows="5" required></textarea><button type="submit">Kirim</button><input type="hidden" name="_next" value="https://namadomainkamu.com/terima-kasih.html"><input type="hidden" name="_captcha" value="false"></form>`;
+      }
+      content.innerHTML = html;
+    }
+
+    // Load default page
+    showPage("beranda");
+
+    // Dark mode
+    const toggleButton = document.getElementById("darkModeToggle");
+    const body = document.body;
+    if (localStorage.getItem("darkMode") === "enabled") {
+      body.classList.add("dark-mode");
+      toggleButton.textContent = "☀️";
+    }
+
+    toggleButton.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+      const enabled = body.classList.contains("dark-mode");
+      toggleButton.textContent = enabled ? "☀️" : "🌙";
+      localStorage.setItem("darkMode", enabled ? "enabled" : "disabled");
+    });
+  </script>
+</body>
+</html>
